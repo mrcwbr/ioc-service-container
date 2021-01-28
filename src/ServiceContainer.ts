@@ -6,7 +6,7 @@ export default {
 
   set(id: string, factory: () => any) {
     const lowerId = id.toLowerCase();
-    if (services.find(service => service.id === lowerId) !== undefined) {
+    if (services.find(s => s.id === lowerId) !== undefined) {
       throw new Error(`Service [${id}] is already registered`);
     }
 
@@ -17,7 +17,7 @@ export default {
   },
 
   get<T>(id: string): T {
-    const service = services.find(service => service.id === id.toLowerCase());
+    const service = services.find(s => s.id === id.toLowerCase());
     if (!service) {
       throw new Error(`No service is registered for [${id}]`);
     }
