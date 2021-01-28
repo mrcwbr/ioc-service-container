@@ -1,7 +1,7 @@
-import ServiceContainer from "./ServiceContainer";
-import { inject } from "./decorators";
+import ServiceContainer from './ServiceContainer';
+import { inject } from './decorators';
 
 export {
-    ServiceContainer,
-    inject
-}
+  ServiceContainer,
+  inject
+};
