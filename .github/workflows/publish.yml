@@ -1,0 +1,30 @@
+name: NPM Package
+on:
+  release:
+    types: [created]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '14'
+        registry-url: 'https://registry.npmjs.org'
+        
+    - name: install dependencies
+      run: npm ci
+    
+    - name: test
+      run: npm run test
+    
+    - name: build
+      run: npm run build
+    
+    - name: set version
+      run: npm --no-git-tag-version version ${GITHUB_REF#refs/*/}
+      
+    - run: npm publish
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
