@@ -519,3 +519,4 @@ MigrationBackup/
 /.gitconfig
 /.idea/
 /dist/
+/coverage/
