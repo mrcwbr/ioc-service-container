@@ -1,19 +1,20 @@
 import ServiceContainer from './ServiceContainer';
 
-export const inject = (target: any, key: string) => {
+export const inject = (target: Object, propertyKey: string) => {
+  // todo further improvements set key as string not via name
+  // https://dev.to/danywalls/using-property-decorators-in-typescript-with-a-real-example-44e
 
   const getter = () => {
-    return ServiceContainer.get(key.toLocaleLowerCase());
+    return ServiceContainer.get(propertyKey.toLowerCase());
   };
 
-  // @ts-ignore
-  if (delete this[key]) {
-    Object.defineProperty(target, key, {
-      get: getter,
-      set: undefined,
-      enumerable: true,
-      configurable: true
-    });
-  }
-}
+  const setter = () => {
+    throw new Error(`Injected property [${propertyKey}] can't be reset`);
+  };
+
+  Object.defineProperty(target, propertyKey, {
+    get: getter,
+    set: setter
+  });
+};
 

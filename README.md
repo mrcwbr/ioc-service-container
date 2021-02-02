@@ -5,6 +5,11 @@
 
 This is a lightweight library for a service container written in TypeScript.
 
+## Get started
+
+Install the dependency with `npm install ioc-service-container
+`
+
 ## Background
 
 Structuring your code and avoiding implizit dependencies is two of the most effective ways to avoiding bugs, especially
