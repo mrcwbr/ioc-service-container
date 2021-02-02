@@ -1,7 +1,7 @@
 {
-  "name": "ioc",
-  "version": "0.1.0",
-  "description": "",
+  "name": "ioc-service-container",
+  "version": "0.1.1",
+  "description": "Lightweight ioc service container",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -9,7 +9,7 @@
     "example": "ts-node example/example.ts",
     "test": "jest"
   },
-  "author": "",
+  "author": "mrcwbr",
   "license": "ISC",
   "devDependencies": {
     "@types/jest": "^26.0.20",
@@ -17,5 +17,9 @@
     "ts-jest": "^26.4.4",
     "ts-node": "^9.1.1",
     "typescript": "^4.1.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.com:smscr/ja-container.git"
   }
 }
