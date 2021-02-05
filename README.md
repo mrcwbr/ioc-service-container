@@ -10,6 +10,50 @@ This is a lightweight library for a service container written in TypeScript.
 Install the dependency with `npm install ioc-service-container
 `
 
+## Usage
+
+First set up an Enum for preventing typos or redefinition of service ids:
+
+```typescript
+export enum ServiceId {
+  TestApi = 'TestApi',
+  TestService = 'TestService',
+}
+```
+
+According to this you have to pass a factory of your required services to the ioc container. So at the initial script of
+your application you call:
+
+```typescript
+import { ServiceId } from './ServiceId';
+import { ServiceContainer } from 'ioc-service-container';
+
+ServiceContainer.set(ServiceId.TestApi, () => new CustomTestApi());
+ServiceContainer.set(ServiceId.TestService, () => new CustomTestService());
+```
+
+Now you have two options to inject the requested service. The first one is without the usage of TypeScript annotations.
+This can be used anywhere in your code:
+
+```typescript
+import { ServiceId } from './ServiceId';
+import { ServiceContainer } from 'ioc-service-container';
+
+const testService = ServiceContainer.get<TestService>(ServiceId.TestApi);
+const testApi = ServiceContainer.get<TestService>(ServiceId.TestService);
+```
+
+The second option is to use the `@inject` decorator inside a class:
+
+```typescript
+export class CustomTestService implements TestService {
+  @inject
+  private readonly testApi!: TestApi; // Important is the naming of the property, its mapped to a sericeId
+}
+```
+
+Your can see a demo in the `./example` folder. To run this type in `npm run example`.
+
 ## Background
 
 Structuring your code and avoiding implizit dependencies is two of the most effective ways to avoiding bugs, especially
