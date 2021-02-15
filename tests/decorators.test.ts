@@ -1,5 +1,5 @@
 import ServiceContainer from '../src/ServiceContainer';
-import { inject, injectViaId } from '../src/decorators';
+import { inject } from '../src/decorators';
 
 describe('decorators', () => {
 
@@ -35,7 +35,7 @@ describe('decorators', () => {
     ServiceContainer.set(serviceId, () => service);
 
     class Foo {
-      @injectViaId(serviceId)
+      @inject(serviceId)
       fooService: any;
     }
 
