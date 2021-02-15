@@ -1,9 +1,9 @@
 import ServiceContainer from '../src/ServiceContainer';
-import { inject } from '../src/decorators';
+import { inject, injectViaId } from '../src/decorators';
 
 describe('decorators', () => {
 
-  it('inject() should inject service', () => {
+  it('inject() should inject service to an object', () => {
     const id = 'aService';
     const service = jest.fn();
     ServiceContainer.set(id, () => service);
@@ -27,6 +27,20 @@ describe('decorators', () => {
 
     const foo = new Foo();
     expect(foo.service).toEqual(service);
+  });
+
+  it('injectViaId should work as an decorator on a custom property key', () => {
+    const serviceId = 'service';
+    const service = jest.fn();
+    ServiceContainer.set(serviceId, () => service);
+
+    class Foo {
+      @injectViaId(serviceId)
+      fooService: any;
+    }
+
+    const foo = new Foo();
+    expect(foo.fooService).toEqual(service);
   });
 
 

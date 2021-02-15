@@ -1,11 +1,18 @@
 import ServiceContainer from './ServiceContainer';
 
-export const inject = (target: Object, propertyKey: string) => {
-  // todo further improvements set key as string not via name
-  // https://dev.to/danywalls/using-property-decorators-in-typescript-with-a-real-example-44e
+export function inject(target: Object, propertyKey: string) {
+  redefineObject(target, propertyKey);
+}
 
+export function injectViaId(serviceId: string) {
+  return function(target: Object, propertyKey: string) {
+    redefineObject(target, propertyKey, serviceId);
+  };
+}
+
+function redefineObject(target: Object, propertyKey: string, serviceId?: string) {
   const getter = () => {
-    return ServiceContainer.get(propertyKey.toLowerCase());
+    return ServiceContainer.get(serviceId?.toLowerCase() || propertyKey.toLowerCase());
   };
 
   const setter = () => {
@@ -16,5 +23,4 @@ export const inject = (target: Object, propertyKey: string) => {
     get: getter,
     set: setter
   });
-};
-
+}

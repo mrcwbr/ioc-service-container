@@ -3,16 +3,20 @@ import { CustomTestApi } from './CustomTestApi';
 import { CustomTestService } from './CustomTestService';
 import { TestService } from './TestService';
 import { ServiceId } from './ServiceId';
+import { CustomFooApi } from './CustomFooApi';
 
 console.log('Started example');
 
-ServiceContainer.set(ServiceId.TestApi, () => new CustomTestApi());
-console.log('Passed testApi-factory to ServiceContainer');
-
-ServiceContainer.set(ServiceId.TestService, () => new CustomTestService());
-console.log('Passed testService-Factory to ServiceContainer');
+setupServiced();
+console.log('Passed factories to container');
 
 const testService = ServiceContainer.get<TestService>(ServiceId.TestService);
-console.log('Instantiated testService via ServiceContainer')
+console.log('Instantiated testService via ServiceContainer');
 
-testService.save()
+testService.save();
+
+function setupServiced() {
+  ServiceContainer.set(ServiceId.TestApi, () => new CustomTestApi());
+  ServiceContainer.set(ServiceId.FooApi, () => new CustomFooApi());
+  ServiceContainer.set(ServiceId.TestService, () => new CustomTestService());
+}

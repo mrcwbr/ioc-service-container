@@ -18,18 +18,19 @@ First set up an Enum for preventing typos or redefinition of service ids:
 export enum ServiceId {
   TestApi = 'TestApi',
   TestService = 'TestService',
+  FooApi = 'FooApi',
 }
 ```
 
 According to this you have to pass a factory of your required services to the ioc container. So at the initial script of
-your application you call:
+your application you call a function named e.g. `setupServiced`:
 
 ```typescript
-import { ServiceId } from './ServiceId';
-import { ServiceContainer } from 'ioc-service-container';
-
-ServiceContainer.set(ServiceId.TestApi, () => new CustomTestApi());
-ServiceContainer.set(ServiceId.TestService, () => new CustomTestService());
+function setupServiced() {
+  ServiceContainer.set(ServiceId.TestApi, () => new CustomTestApi());
+  ServiceContainer.set(ServiceId.FooApi, () => new CustomFooApi());
+  ServiceContainer.set(ServiceId.TestService, () => new CustomTestService());
+}
 ```
 
 Now you have two options to inject the requested service. The first one is without the usage of TypeScript annotations.
@@ -48,7 +49,10 @@ The second option is to use the `@inject` decorator inside a class:
 ```typescript
 export class CustomTestService implements TestService {
   @inject
-  private readonly testApi!: TestApi; // Important is the naming of the property, its mapped to a sericeId
+  private readonly testApi!: TestApi; // Important is the naming of the property, its mapped to the sericeId
+
+  @injectViaId(ServiceId.FooApi)
+  private readonly nameThisHowYouWant!: FooApi // If you don't want to name your property like the service id, use this decorator
 }
 ```
 
