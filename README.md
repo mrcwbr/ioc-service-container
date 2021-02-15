@@ -2,6 +2,11 @@
 
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=mrcwbr_ioc-service-container&metric=code_smells)](https://sonarcloud.io/dashboard?id=mrcwbr_ioc-service-container)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=mrcwbr_ioc-service-container&metric=bugs)](https://sonarcloud.io/dashboard?id=mrcwbr_ioc-service-container)
+![min-size](https://badgen.net/bundlephobia/min/ioc-service-container)
+![min-size-g-zip](https://badgen.net/bundlephobia/minzip/ioc-service-container)
+![dependency-count](https://badgen.net/bundlephobia/dependency-count/ioc-service-container)
+![npm-version](https://badgen.net/npm/v/ioc-service-container)
+![ts-types](https://badgen.net/npm/types/ioc-service-container)
 
 This is a lightweight library for a service container written in TypeScript.
 
