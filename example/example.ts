@@ -5,15 +5,19 @@ import { TestService } from './TestService';
 import { ServiceId } from './ServiceId';
 import { CustomFooApi } from './CustomFooApi';
 
-console.log('Started example');
+example();
 
-setupServiced();
-console.log('Passed factories to container');
+export function example() {
+  console.log('Started example');
 
-const testService = ServiceContainer.get<TestService>(ServiceId.TestService);
-console.log('Instantiated testService via ServiceContainer');
+  setupServiced();
+  console.log('Passed factories to container');
 
-testService.save();
+  const testService = ServiceContainer.get<TestService>(ServiceId.TestService);
+  console.log('Instantiated testService via ServiceContainer');
+
+  testService.save();
+}
 
 function setupServiced() {
   ServiceContainer.set(ServiceId.TestApi, () => new CustomTestApi());

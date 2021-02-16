@@ -1,13 +1,13 @@
 import ServiceContainer from './ServiceContainer';
 
-export function inject(target: Object, propertyKey: string) {
-  redefineObject(target, propertyKey);
-}
+export function inject(serviceIdOrTarget: Object | string, propertyKey?: string): any {
+  if (typeof serviceIdOrTarget === 'string') {
+    return function(target: Object, propertyKey: string): void {
+      redefineObject(target, propertyKey, serviceIdOrTarget);
+    };
+  }
 
-export function injectViaId(serviceId: string) {
-  return function(target: Object, propertyKey: string) {
-    redefineObject(target, propertyKey, serviceId);
-  };
+  redefineObject(serviceIdOrTarget, propertyKey);
 }
 
 function redefineObject(target: Object, propertyKey: string, serviceId?: string) {

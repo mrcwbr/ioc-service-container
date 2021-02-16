@@ -1,4 +1,4 @@
-import ServiceContainer from '../src/ServiceContainer';
+import { ServiceContainer } from '../src';
 
 describe('ServiceContainer', () => {
 
@@ -36,6 +36,5 @@ describe('ServiceContainer', () => {
   afterEach(() => {
     ServiceContainer.reset();
   });
-
 
 });
