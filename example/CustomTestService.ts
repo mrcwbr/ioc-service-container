@@ -1,5 +1,5 @@
 import { TestApi } from './TestApi';
-import { inject } from '../src/index';
+import { inject } from '../src/';
 import { TestService } from './TestService';
 import { FooApi } from './FooApi';
 import { ServiceId } from './ServiceId';

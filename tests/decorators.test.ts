@@ -15,6 +15,20 @@ describe('decorators', () => {
     expect(anObject.aService).toEqual(service);
   });
 
+  it('should prevent injected property from reset', () => {
+    const id = 'aService';
+    const service = jest.fn();
+    ServiceContainer.set(id, () => service);
+
+    const anObject = {
+      aService: undefined,
+    };
+
+    inject(anObject, 'aService');
+
+    expect(() => anObject.aService = jest.fn()).toThrow('Injected property [aService] can\'t be reset');
+  });
+
   it('inject should work as an decorator', () => {
     const service = jest.fn();
     ServiceContainer.set('service', () => service);
@@ -42,10 +56,8 @@ describe('decorators', () => {
     expect(foo.fooService).toEqual(service);
   });
 
-
   afterEach(() => {
     ServiceContainer.reset();
   });
-
 
 });

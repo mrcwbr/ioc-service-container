@@ -11,6 +11,23 @@ describe('ServiceContainer', () => {
     expect(service).toEqual(serviceFromIoc);
   });
 
+  it('should only call factory once', () => {
+    const id = 'aService';
+    const service = jest.fn();
+    const factoryCountListener = jest.fn();
+
+    ServiceContainer.set(id, () => {
+      factoryCountListener();
+      return service;
+    });
+
+    const serviceOneFromIoc = ServiceContainer.get(id);
+    const serviceTwoFromIoc = ServiceContainer.get(id);
+    expect(serviceOneFromIoc).toEqual(service);
+    expect(serviceTwoFromIoc).toEqual(service);
+    expect(factoryCountListener).toHaveBeenCalledTimes(1);
+  });
+
   it('should throw error if service is set twice', () => {
     const id = 'aService';
     ServiceContainer.set(id, () => jest.fn());

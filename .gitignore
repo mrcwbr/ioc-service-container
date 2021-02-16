@@ -520,3 +520,4 @@ MigrationBackup/
 /.idea/
 /dist/
 /coverage/
+/.scannerwork/

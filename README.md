@@ -1,7 +1,10 @@
 # ioc-service-container
 
-[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=mrcwbr_ioc-service-container&metric=code_smells)](https://sonarcloud.io/dashboard?id=mrcwbr_ioc-service-container)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=mrcwbr_ioc-service-container&metric=bugs)](https://sonarcloud.io/dashboard?id=mrcwbr_ioc-service-container)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ioc-service-container&metric=alert_status)](https://sonarcloud.io/dashboard?id=ioc-service-container)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=ioc-service-container&metric=bugs)](https://sonarcloud.io/dashboard?id=ioc-service-container)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=ioc-service-container&metric=code_smells)](https://sonarcloud.io/dashboard?id=ioc-service-container)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=ioc-service-container&metric=coverage)](https://sonarcloud.io/dashboard?id=ioc-service-container)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=ioc-service-container&metric=security_rating)](https://sonarcloud.io/dashboard?id=ioc-service-container)
 ![min-size](https://badgen.net/bundlephobia/min/ioc-service-container)
 ![min-size-g-zip](https://badgen.net/bundlephobia/minzip/ioc-service-container)
 ![dependency-count](https://badgen.net/bundlephobia/dependency-count/ioc-service-container)
@@ -11,7 +14,9 @@
 This is a lightweight library for a service container written in TypeScript.
 
 <a href="https://www.buymeacoffee.com/Mrcwbr" target="_blank">
-  <img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" >
+  <img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png"
+       alt="Buy Me A Coffee"
+       style="height: 41px !important;width: 174px !important;box-shadow: 0 3px 2px 0 rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0 3px 2px 0 rgba(190, 190, 190, 0.5) !important;" >
 </a>
 
 ## Get started
@@ -60,7 +65,7 @@ export class CustomTestService implements TestService {
   @inject
   private readonly testApi!: TestApi; // Important is the naming of the property, its mapped to the sericeId
 
-  @injectViaId(ServiceId.FooApi)
+  @inject(ServiceId.FooApi)
   private readonly nameThisHowYouWant!: FooApi // If you don't want to name your property like the service id, use this decorator
 }
 ```
