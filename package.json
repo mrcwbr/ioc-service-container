@@ -28,5 +28,16 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/mrcwbr/ioc-service-container"
-  }
+  },
+  "keywords": [
+    "ioc",
+    "inversion of control",
+    "di",
+    "dependency injection",
+    "service container",
+    "ioc container",
+    "service locator",
+    "javascript",
+    "typescript"
+  ]
 }

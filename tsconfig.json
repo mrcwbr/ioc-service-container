@@ -5,7 +5,8 @@
     "outDir": "./dist",
     "declaration": true,
     "esModuleInterop": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "module": "commonjs"
   },
   "include": [
     "src/**/*"

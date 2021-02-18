@@ -1,26 +1,18 @@
 import { ServiceContainer } from '../src/index';
-import { CustomTestApi } from './CustomTestApi';
-import { CustomTestService } from './CustomTestService';
-import { TestService } from './TestService';
-import { ServiceId } from './ServiceId';
-import { CustomFooApi } from './CustomFooApi';
+import { ServiceId } from './ioc/ServiceId';
+import { Service } from './Service';
+import { setupServices } from './ioc/setupServices';
 
 example();
 
 export function example() {
   console.log('Started example');
 
-  setupServiced();
+  setupServices();
   console.log('Passed factories to container');
 
-  const testService = ServiceContainer.get<TestService>(ServiceId.TestService);
+  const service = ServiceContainer.get<Service>(ServiceId.Service);
   console.log('Instantiated testService via ServiceContainer');
 
-  testService.save();
-}
-
-function setupServiced() {
-  ServiceContainer.set(ServiceId.TestApi, () => new CustomTestApi());
-  ServiceContainer.set(ServiceId.FooApi, () => new CustomFooApi());
-  ServiceContainer.set(ServiceId.TestService, () => new CustomTestService());
+  service.save();
 }

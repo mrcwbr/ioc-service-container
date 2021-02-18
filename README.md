@@ -51,9 +51,6 @@ Now you have two options to inject the requested service. The first one is witho
 This can be used anywhere in your code:
 
 ```typescript
-import { ServiceId } from './ServiceId';
-import { ServiceContainer } from 'ioc-service-container';
-
 const testService = ServiceContainer.get<TestService>(ServiceId.TestApi);
 const testApi = ServiceContainer.get<TestService>(ServiceId.TestService);
 ```
@@ -63,10 +60,12 @@ The second option is to use the `@inject` decorator inside a class:
 ```typescript
 export class CustomTestService implements TestService {
   @inject
-  private readonly testApi!: TestApi; // Important is the naming of the property, its mapped to the sericeId
+  private readonly customApi!: Api; // Important is the naming of the property, its mapped to the serice id
 
-  @inject(ServiceId.FooApi)
-  private readonly nameThisHowYouWant!: FooApi // If you don't want to name your property like the service id, use this decorator
+  @inject(ServiceId.FooApi) // If you don't want to name your property like the service id, use this decorator
+  private readonly nameThisHowYouWant!: Api;
+
+  private readonly barApi = ServiceContainer.get<Api>(ServiceId.BarApi) // Use this syntax if you don't want to use decorators
 }
 ```
 

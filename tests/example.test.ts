@@ -13,8 +13,9 @@ describe('example', () => {
 
     example();
 
-    expect(consoleSpy).toHaveBeenCalledWith('FooApi updated successfully! 🎉');
-    expect(consoleSpy).toHaveBeenCalledWith('TestApi saved successfully! 🚀');
+    expect(consoleSpy).toHaveBeenCalledWith('CustomApi saved successfully! 🎉');
+    expect(consoleSpy).toHaveBeenCalledWith('FooApi saved successfully! ❤️');
+    expect(consoleSpy).toHaveBeenCalledWith('BarApi saved successfully! 🚀');
   });
 
   afterEach(() => {
