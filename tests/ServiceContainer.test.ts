@@ -51,11 +51,11 @@ describe('ServiceContainer', () => {
   });
 
   it('should override service if possible', () => {
-    expect(() => ServiceContainer.override('counter', () => 99)).toThrow('No service is registered for [counter]');
-    ServiceContainer.set('counter', () => 1);
-    expect(ServiceContainer.get('counter')).toBe(1);
-    ServiceContainer.override('counter', () => 22);
-    expect(ServiceContainer.get('counter')).toBe(22);
+    expect(() => ServiceContainer.override('TestCounter', () => 99)).toThrow('No service is registered for [TestCounter]');
+    ServiceContainer.set('TestCounter', () => 1);
+    expect(ServiceContainer.get('TestCounter')).toBe(1);
+    ServiceContainer.override('TestCounter', () => 22);
+    expect(ServiceContainer.get('TestCounter')).toBe(22);
   });
 
   afterEach(() => {

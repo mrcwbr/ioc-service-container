@@ -30,13 +30,14 @@ export default {
   },
 
   override(id: string, factory: () => any) {
-    const index = services.findIndex(s => s.id === id.toLowerCase());
+    const lowerId = id.toLowerCase();
+    const index = services.findIndex(s => s.id === lowerId);
     if (index === -1) {
       throw new Error(`No service is registered for [${id}]`);
     }
 
     services[index] = {
-      id,
+      id: lowerId,
       factory
     };
   },
