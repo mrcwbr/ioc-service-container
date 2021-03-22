@@ -50,6 +50,14 @@ describe('ServiceContainer', () => {
     expect(() => ServiceContainer.get(secondId)).toThrow('No service is registered for [secondID]');
   });
 
+  it('should override service if possible', () => {
+    expect(() => ServiceContainer.override('counter', () => 99)).toThrow('No service is registered for [counter]');
+    ServiceContainer.set('counter', () => 1);
+    expect(ServiceContainer.get('counter')).toBe(1);
+    ServiceContainer.override('counter', () => 22);
+    expect(ServiceContainer.get('counter')).toBe(22);
+  });
+
   afterEach(() => {
     ServiceContainer.reset();
   });

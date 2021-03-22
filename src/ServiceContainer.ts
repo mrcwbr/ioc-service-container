@@ -29,6 +29,18 @@ export default {
     return service.instance;
   },
 
+  override(id: string, factory: () => any) {
+    const index = services.findIndex(s => s.id === id.toLowerCase());
+    if (index === -1) {
+      throw new Error(`No service is registered for [${id}]`);
+    }
+
+    services[index] = {
+      id,
+      factory
+    };
+  },
+
   reset() {
     services = [];
   }
