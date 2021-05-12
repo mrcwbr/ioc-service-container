@@ -11,6 +11,24 @@ describe('ServiceContainer', () => {
     expect(service).toEqual(serviceFromIoc);
   });
 
+  it('service should be instantiated on demand by default', () => {
+    const listener = jest.fn();
+    const factory = () => {
+      listener();
+    };
+    ServiceContainer.set('id', factory);
+    expect(listener).not.toHaveBeenCalled();
+  });
+
+  it('service should be instantiated instantly if required', () => {
+    const listener = jest.fn();
+    const factory = () => {
+      listener();
+    };
+    ServiceContainer.set('id', factory, true);
+    expect(listener).toHaveBeenCalled();
+  });
+
   it('should only call factory once', () => {
     const id = 'aService';
     const service = jest.fn();
