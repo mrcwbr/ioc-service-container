@@ -2,13 +2,27 @@ import { ServiceContainer } from '../src';
 
 describe('ServiceContainer', () => {
 
-  it('should set and get service', () => {
+  it('should set (by factory) and get service', () => {
     const id = 'aService';
     const service = jest.fn();
     ServiceContainer.set(id, () => service);
 
     const serviceFromIoc = ServiceContainer.get(id);
     expect(service).toEqual(serviceFromIoc);
+  });
+
+  it('should set (by class reference) and get service', () => {
+    class Foo {
+      bar() {
+        return 'bar';
+      }
+    }
+
+    const id = 'aService';
+    ServiceContainer.set(id, Foo);
+
+    const serviceFromIoc = ServiceContainer.get<Foo>(id);
+    expect(serviceFromIoc.bar()).toBe('bar');
   });
 
   it('service should be instantiated on demand by default', () => {

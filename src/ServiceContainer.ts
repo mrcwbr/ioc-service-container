@@ -1,24 +1,27 @@
-import { Service } from './Service';
-
 let services: Service[] = [];
 
 export default {
   /**
    *
    * @param id to identify the service in the container, it can be mapped to a property name via the inject decorator
-   * @param factory to create the instance of the service
+   * @param factoryOrClassReference to create the instance of the service
    * @param buildInstantly by default the service is only instantiated on demand, if required your are able to build the service directly
    */
-  set(id: string, factory: () => any, buildInstantly: boolean = false) {
+  set(id: string, factoryOrClassReference: Factory | Function, buildInstantly: boolean = false) {
     const lowerId = id.toLowerCase();
     if (services.find(s => s.id === lowerId) !== undefined) {
       throw new Error(`Service [${id}] is already registered`);
     }
 
+    let factory: Factory | undefined = undefined;
+    if (isClassReference(factoryOrClassReference)) {
+      factory = () => new factoryOrClassReference();
+    }
+
     services.push({
       id: lowerId,
-      factory,
-      instance: buildInstantly ? factory() : undefined,
+      factory: factory || factoryOrClassReference as Factory,
+      instance: buildInstantly ? factoryOrClassReference() : undefined,
     });
   },
 
@@ -54,3 +57,13 @@ export default {
 
 };
 
+function isClassReference(v: any): v is Function { // https://stackoverflow.com/a/30760236
+  return typeof v === 'function' && /^\s*class\s+/.test(v.toString());
+}
+
+type Factory = () => any;
+type Service = {
+  id: string;
+  factory: () => any;
+  instance?: any;
+}

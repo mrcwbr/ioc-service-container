@@ -26,7 +26,7 @@ Install the dependency with `npm install ioc-service-container
 
 ## Usage
 
-First set up an Enum for preventing typos or redefinition of service ids:
+First set up an Enum for preventing typos or redefinition of service ids in a file called `ServiceIds.ts`:
 
 ```typescript
 export enum ServiceId {
@@ -37,23 +37,54 @@ export enum ServiceId {
 ```
 
 According to this you have to pass a factory of your required services to the ioc container. So at the initial script of
-your application you call a function named e.g. `setupServiced`:
+your application you call a function named e.g. `setupService`:
 
 ```typescript
-function setupServiced() {
-  ServiceContainer.set(ServiceId.TestApi, () => new CustomTestApi());
-  ServiceContainer.set(ServiceId.FooApi, () => new CustomFooApi());
-  ServiceContainer.set(ServiceId.TestService, () => new CustomTestService());
+import { ServiceContainer } from 'ioc-service-container';
+
+function setupService() {
+  ServiceContainer.set(ServiceId.TestApi, CustomTestApi); // setup by class reference
+  ServiceContainer.set(ServiceId.FooApi, () => new CustomFooApi()); // setup by custom factory
+  ServiceContainer.set(ServiceId.Xyz, () => 'xyz');
 }
 ```
 
 Now you have two options to inject the requested service. The first one is without the usage of TypeScript annotations.
 This can be used anywhere in your code:
 
+### Assign service to a var
+
 ```typescript
-const testService = ServiceContainer.get<TestService>(ServiceId.TestApi);
-const testApi = ServiceContainer.get<TestService>(ServiceId.TestService);
+import { scg, ServiceContainer } from 'ioc-service-container';
+
+const testService = ServiceContainer.get<TestService>(ServiceId.TestService);
+const testService1 = scg<TestService>(ServiceId.TestService); // scg is a shortcut for ServiceContainer.get()
 ```
+
+#### Full TypeScript Support without generics
+
+As you can see in the example above it's very unsexy to assign a service to a constant. You have to write 3
+times `testService` (constant's name, generic & ServiceId). You are able to improve the typings by adding following
+content in your `ServiceIds.ts` file :
+
+```typescript
+export enum ServiceId {
+  TestApi = 'TestApi',
+  // ...
+}
+
+declare module 'ioc-service-container' {
+  export function scg<T extends keyof ServiceIdMap, U extends ServiceIdMap[T]>(id: T): U;
+
+  type ServiceIdMap = {
+    [ServiceId.TestApi]: TestApi,
+  }
+}
+```
+
+If you now use `const a = scg(ServiceId.TestApi)`, `a` is correctly typed.
+
+### Inject service via typescript decorator
 
 The second option is to use the `@inject` decorator inside a class:
 

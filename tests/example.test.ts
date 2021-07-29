@@ -7,7 +7,7 @@ describe('example', () => {
     ServiceContainer.reset();
   });
 
-  test('example', () => {
+  it('should print expected lines to console', () => {
     const consoleSpy = jest.fn();
     console.log = consoleSpy;
 
