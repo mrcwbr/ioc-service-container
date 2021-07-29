@@ -4,11 +4,10 @@ describe('ServiceContainer', () => {
 
   it('should set (by factory) and get service', () => {
     const id = 'aService';
-    const service = jest.fn();
-    ServiceContainer.set(id, () => service);
+    ServiceContainer.set(id, () => 123);
 
     const serviceFromIoc = ServiceContainer.get(id);
-    expect(service).toEqual(serviceFromIoc);
+    expect(serviceFromIoc).toEqual(123);
   });
 
   it('should set (by class reference) and get service', () => {

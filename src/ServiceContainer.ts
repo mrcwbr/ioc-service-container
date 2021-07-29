@@ -14,7 +14,7 @@ export default {
     }
 
     let factory: Factory | undefined = undefined;
-    if (isClassReference(factoryOrClassReference)) {
+    if (isConstructable(factoryOrClassReference)) {
       factory = () => new factoryOrClassReference();
     }
 
@@ -57,8 +57,8 @@ export default {
 
 };
 
-function isClassReference(v: any): v is Function { // https://stackoverflow.com/a/30760236
-  return typeof v === 'function' && /^\s*class\s+/.test(v.toString());
+function isConstructable(obj: any): obj is Function { // https://stackoverflow.com/a/46320004
+  return !!obj.prototype && !!obj.prototype.constructor.name;
 }
 
 type Factory = () => any;
