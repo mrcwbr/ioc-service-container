@@ -33,13 +33,30 @@ describe('ServiceContainer', () => {
     expect(listener).not.toHaveBeenCalled();
   });
 
-  it('service should be instantiated instantly if required', () => {
-    const listener = jest.fn();
-    const factory = () => {
-      listener();
-    };
-    ServiceContainer.set('id', factory, true);
-    expect(listener).toHaveBeenCalled();
+  describe('service should be instantiated instantly if required', () => {
+
+    it('as factory', () => {
+      const listener = jest.fn();
+      const factory = () => {
+        listener();
+      };
+      ServiceContainer.set('id', factory, true);
+      expect(listener).toHaveBeenCalled();
+    });
+
+    it('as class reference', () => {
+      const listener = jest.fn();
+
+      class Foo {
+        constructor() {
+          listener();
+        }
+      }
+
+      ServiceContainer.set('id', Foo, true);
+      expect(listener).toHaveBeenCalled();
+    });
+
   });
 
   it('should only call factory once', () => {

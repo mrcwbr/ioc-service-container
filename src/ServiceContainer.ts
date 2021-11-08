@@ -13,15 +13,14 @@ export default {
       throw new Error(`Service [${id}] is already registered`);
     }
 
-    let factory: Factory | undefined = undefined;
-    if (isConstructable(factoryOrClassReference)) {
-      factory = () => new factoryOrClassReference();
-    }
+    let factory: Factory = isConstructable(factoryOrClassReference)
+      ? () => new factoryOrClassReference()
+      : factoryOrClassReference;
 
     services.push({
       id: lowerId,
-      factory: factory || factoryOrClassReference as Factory,
-      instance: buildInstantly ? factoryOrClassReference() : undefined,
+      factory,
+      instance: buildInstantly ? factory() : undefined,
     });
   },
 
