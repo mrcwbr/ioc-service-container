@@ -120,32 +120,16 @@ The `CustomService` has an implizit dependency to the `CustomApi`.
 ## Goal
 
 The goal of DI is to encapsulate the dependencies of a class. The CustomService should work without knowing which api it
-is using. Following structure should be created:
+is using. The following structure should be created:
 
+```mermaid
+ classDiagram
+      class Service 
+      <<interface>> Service
+      Service <|-- Consumer
+      class Api
+      <<interface>> Api
+      Api <|-- CustomApi : implements
+      Service <|-- CustomService : implements
+      Api <|-- CustomService      
 ```
-+----------+    +-------------------+
-|          |    |                   |
-| Consumer +--->+ interface Service |
-|          |    |                   |
-+----------+    +---------+---------+
-                          ^
-                          |
-                          |
-                +---------+-----------+     +----------------+
-                |                     |     |                |
-                | class CustomService +---->+  interface Api |
-                | implements Service  |     |                |
-                |                     |     +--------+-------+
-                +---------------------+              ^
-                                                     |
-                                                     |
-                                            +--------+--------+
-                                            |                 |
-                                            | class CustomApi |
-                                            | implements Api  |
-                                            |                 |
-                                            +-----------------+
-
-```
-
-(Btw [asciiflow.com](http://asciiflow.com/) is a great tool for creating small charts for e.g. Readme.md)
