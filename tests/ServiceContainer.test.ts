@@ -35,26 +35,53 @@ describe('ServiceContainer', () => {
 
   describe('service should be instantiated instantly if required', () => {
 
-    it('as factory', () => {
-      const listener = jest.fn();
-      const factory = () => {
-        listener();
-      };
-      ServiceContainer.set('id', factory, true);
-      expect(listener).toHaveBeenCalled();
+    describe('set', () => {
+
+      it('as factory', () => {
+        const listener = jest.fn();
+        const factory = () => {
+          listener();
+        };
+        ServiceContainer.set('id', factory, true);
+        expect(listener).toHaveBeenCalled();
+      });
+
+      it('as class reference', () => {
+        const listener = jest.fn();
+
+        class Foo {
+          constructor() {
+            listener();
+          }
+        }
+
+        ServiceContainer.set('id', Foo, true);
+        expect(listener).toHaveBeenCalled();
+      });
     });
 
-    it('as class reference', () => {
-      const listener = jest.fn();
-
-      class Foo {
-        constructor() {
+    describe('override', () => {
+      it('as factory', () => {
+        const listener = jest.fn();
+        const factory = () => {
           listener();
-        }
-      }
+        };
+        ServiceContainer.override('id', factory, true);
+        expect(listener).toHaveBeenCalled();
+      });
 
-      ServiceContainer.set('id', Foo, true);
-      expect(listener).toHaveBeenCalled();
+      it('as class reference', () => {
+        const listener = jest.fn();
+
+        class Foo {
+          constructor() {
+            listener();
+          }
+        }
+
+        ServiceContainer.override('id', Foo, true);
+        expect(listener).toHaveBeenCalled();
+      });
     });
 
   });
@@ -98,12 +125,36 @@ describe('ServiceContainer', () => {
     expect(() => ServiceContainer.get(secondId)).toThrow('No service is registered for [secondID]');
   });
 
-  it('should override service if possible', () => {
-    expect(() => ServiceContainer.override('TestCounter', () => 99)).toThrow('No service is registered for [TestCounter]');
-    ServiceContainer.set('TestCounter', () => 1);
-    expect(ServiceContainer.get('TestCounter')).toBe(1);
+  it('should set service or override if already set', () => {
+    expect(() => ServiceContainer.override('TestCounter', () => 99)).not.toThrow();
+    expect(ServiceContainer.get('TestCounter')).toBe(99);
     ServiceContainer.override('TestCounter', () => 22);
     expect(ServiceContainer.get('TestCounter')).toBe(22);
+  });
+
+  it('should override service with class reference', () => {
+    class Foo {
+      bar() {
+        return 'bar';
+      }
+    }
+
+    const id = 'aService';
+    ServiceContainer.override(id, Foo);
+
+    const serviceFromIoc = ServiceContainer.get<Foo>(id);
+    expect(serviceFromIoc.bar()).toBe('bar');
+  });
+
+  it('should check if a service is registered', () => {
+    const firstId = 'firstId';
+    const secondId = 'secondID';
+    ServiceContainer.set(firstId, jest.fn());
+    ServiceContainer.set(secondId, jest.fn());
+
+    expect(ServiceContainer.isSet(firstId)).toBe(true);
+    expect(ServiceContainer.isSet(secondId)).toBe(true);
+    expect(ServiceContainer.isSet('thirdId')).toBe(false);
   });
 
   afterEach(() => {

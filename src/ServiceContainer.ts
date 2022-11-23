@@ -13,9 +13,7 @@ export default {
       throw new Error(`Service [${id}] is already registered`);
     }
 
-    let factory: Factory = isConstructable(factoryOrClassReference)
-      ? () => new factoryOrClassReference()
-      : factoryOrClassReference;
+    let factory: Factory = getFactory(factoryOrClassReference);
 
     services.push({
       id: lowerId,
@@ -37,17 +35,25 @@ export default {
     return service.instance;
   },
 
-  override(id: string, factory: () => any) {
+  override(id: string, factoryOrClassReference: Factory | Function, buildInstantly: boolean = false) {
     const lowerId = id.toLowerCase();
     const index = services.findIndex(s => s.id === lowerId);
+    let factory: Factory = getFactory(factoryOrClassReference);
+    const service = {
+      id: lowerId,
+      factory,
+      instance: buildInstantly ? factory() : undefined,
+    };
     if (index === -1) {
-      throw new Error(`No service is registered for [${id}]`);
+      services.push(service);
+    } else {
+      services[index] = service;
     }
 
-    services[index] = {
-      id: lowerId,
-      factory
-    };
+  },
+
+  isSet(id: string): boolean {
+    return services.some(s => s.id === id.toLowerCase());
   },
 
   reset() {
@@ -58,6 +64,12 @@ export default {
 
 function isConstructable(obj: any): obj is Function { // https://stackoverflow.com/a/46320004
   return !!obj.prototype && !!obj.prototype.constructor.name;
+}
+
+function getFactory(factoryOrClassReference: Factory | Function): Factory {
+  return isConstructable(factoryOrClassReference)
+    ? () => new factoryOrClassReference()
+    : factoryOrClassReference;
 }
 
 type Factory = () => any;
