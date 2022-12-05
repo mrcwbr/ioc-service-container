@@ -11,7 +11,7 @@
 ![npm-version](https://badgen.net/npm/v/ioc-service-container)
 ![ts-types](https://badgen.net/npm/types/ioc-service-container)
 
-This is a lightweight library for a service container written in TypeScript.
+This is a lightweight **zero-dependency** library for a service container written in TypeScript.
 
 <a href="https://www.buymeacoffee.com/Mrcwbr" target="_blank">
   <img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png"
@@ -124,12 +124,12 @@ is using. The following structure should be created:
 
 ```mermaid
  classDiagram
-      class Service 
+      class Service
       <<interface>> Service
       Service <|-- Consumer
       class Api
       <<interface>> Api
       Api <|-- CustomApi : implements
       Service <|-- CustomService : implements
-      Api <|-- CustomService      
+      Api <|-- CustomService
 ```
