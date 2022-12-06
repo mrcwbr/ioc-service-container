@@ -11,16 +11,16 @@ export function inject(serviceIdOrTarget: Object | string, propertyKey?: string)
 }
 
 function redefineObject(target: Object, propertyKey: string, serviceId?: string) {
-  const getter = () => {
+  function get() {
     return ServiceContainer.get(serviceId?.toLowerCase() || propertyKey.toLowerCase());
-  };
+  }
 
-  const setter = () => {
+  function set() {
     throw new Error(`Injected property [${propertyKey}] can't be reset`);
-  };
+  }
 
   Object.defineProperty(target, propertyKey, {
-    get: getter,
-    set: setter
+    get,
+    set
   });
 }

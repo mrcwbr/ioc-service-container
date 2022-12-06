@@ -11,96 +11,115 @@
 ![npm-version](https://badgen.net/npm/v/ioc-service-container)
 ![ts-types](https://badgen.net/npm/types/ioc-service-container)
 
-This is a lightweight **zero-dependency** library for a service container written in TypeScript.
-
 <a href="https://www.buymeacoffee.com/Mrcwbr" target="_blank">
   <img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png"
        alt="Buy Me A Coffee"
        style="height: 41px !important;width: 174px !important;box-shadow: 0 3px 2px 0 rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0 3px 2px 0 rgba(190, 190, 190, 0.5) !important;" >
 </a>
 
+> This is a lightweight **zero-dependency** library for a service container written in TypeScript.
+
+## Features
+
+* **Fully typed**
+* **100% TypeScript written**
+* **100% test coverage**
+* **0 dependencies**
+* **< 2 KB package size**
+* **Typescript Decorator support**
+* **Simple API**
+* **Works beautiful with [jest-mock-extended](https://www.npmjs.com/package/jest-mock-extended)**
+
+## Demo
+
+In this [StackBlitz-Demo](https://stackblitz.com/edit/react-ts-qya4xy?file=App.tsx) you can see a demonstration of
+the `ioc-service-container`. In the `App.tsx` you can verify that the `UserService` is fully typed without importing the
+class.
+
+![TypeScriptSupport](https://i.ibb.co/stpBrkk/type.jpg)
+
 ## Get started
 
-Install the dependency with `npm install ioc-service-container
-`
+Install the dependency with `npm install ioc-service-container`
 
 ## Usage
 
-First set up an Enum for preventing typos or redefinition of service ids in a file called `ServiceIds.ts`:
+### 1. Define the Types
+
+If you use the `ioc-service-container` in a TypeScript project, define the types of your services in a `ioc.d.ts` file
+otherwise you can skip this step.
 
 ```typescript
-export enum ServiceId {
-  TestApi = 'TestApi',
-  TestService = 'TestService',
-  FooApi = 'FooApi',
+// Import your services
+import { TestApi } from '../your-path/to/TestApi'
+import { FooApi } from '../your-path/to/FooApi'
+import { TestService } from '../your-path/to/TestService'
+
+// Create the mapping between ServiceId and Service
+type IoCTypes = {
+  TestApi: TestApi,
+  FooApi: FooApi,
+  TestService: TestService,
+  // ...
+};
+
+// Redeclare the scg function to get full Typscript support
+declare module 'ioc-service-container' {
+  export function scg<T extends keyof IoCTypes, U extends IoCTypes[T]>(id: T): U;
 }
 ```
 
-According to this you have to pass a factory of your required services to the ioc container. So at the initial script of
-your application you call a function named e.g. `setupService`:
+### 2. Setup your services
+
+According to this you have to pass a factory or a class reference of your required services to the ioc container. So
+at the initial script of your application you call a function named e.g. `setupService`:
 
 ```typescript
 import { ServiceContainer } from 'ioc-service-container';
 
 function setupService() {
-  ServiceContainer.set(ServiceId.TestApi, CustomTestApi); // setup by class reference
-  ServiceContainer.set(ServiceId.FooApi, () => new CustomFooApi()); // setup by custom factory
-  ServiceContainer.set(ServiceId.Xyz, () => 'xyz');
+  ServiceContainer.set('TestApi', CustomTestApi); // setup by class reference
+  ServiceContainer.set('FooApi', () => new CustomFooApi()); // setup by custom factory
+  ServiceContainer.set('TestService', TestService, true); // instantieate immediately
 }
 ```
 
-Now you have two options to inject the requested service. The first one is without the usage of TypeScript annotations.
-This can be used anywhere in your code:
+The factory is only instantiated at need. You can pass the `buildInstantly` attribute if the service should be
+initialized immediately e.g. for setting up [Sentry](https://sentry.io/welcome/) in a `LoggingService`.
 
-### Assign service to a var
+### 3. Inject services
 
-```typescript
-import { scg, ServiceContainer } from 'ioc-service-container';
+Now you have 2 options to inject the requested service.
 
-const testService = ServiceContainer.get<TestService>(ServiceId.TestService);
-const testService1 = scg<TestService>(ServiceId.TestService); // scg is a shortcut for ServiceContainer.get()
-```
+#### 3.1 `scg()` Function
 
-#### Full TypeScript Support without generics
+The first is the most common one: `const testApi = scg('TestApi);`. (Shortcut for `ServiceContainer.get()`. Because of
+the type declaration you have full TypeScript support at this point and no dependency on the file/class `TestApi`. (See
+the [Demo](https://stackblitz.com/edit/react-ts-qya4xy?file=App.tsx))
 
-As you can see in the example above it's very unsexy to assign a service to a constant. You have to write 3
-times `testService` (constant's name, generic & ServiceId). You are able to improve the typings by adding following
-content in your `ServiceIds.ts` file :
+#### 3.2 `@inject` Decorator
 
-```typescript
-export enum ServiceId {
-  TestApi = 'TestApi',
-  // ...
-}
-
-declare module 'ioc-service-container' {
-  export function scg<T extends keyof ServiceIdMap, U extends ServiceIdMap[T]>(id: T): U;
-
-  type ServiceIdMap = {
-    [ServiceId.TestApi]: TestApi,
-  }
-}
-```
-
-If you now use `const a = scg(ServiceId.TestApi)`, `a` is correctly typed.
-
-### Inject service via typescript decorator
-
-The second option is to use the `@inject` decorator inside a class:
+> This requires `"experimentalDecorators": true` to be enabled in your `tsconfig.json`
+> (See [Typescript Docs](https://www.typescriptlang.org/tsconfig#experimentalDecorators))
 
 ```typescript
 export class CustomTestService implements TestService {
   @inject
-  private readonly customApi!: Api; // Important is the naming of the property, its mapped to the serice id
+  private readonly customApi!: Api; // Important is the naming of the property, it's mapped to the service id
 
-  @inject(ServiceId.FooApi) // If you don't want to name your property like the service id, use this decorator
+  @inject('FooApi') // If you don't want to name your property like the service id, pass the id as parameter
   private readonly nameThisHowYouWant!: Api;
 
-  private readonly barApi = ServiceContainer.get<Api>(ServiceId.BarApi) // Use this syntax if you don't want to use decorators
-}
-```
+  private readonly fooApi = ServiceContainer.get<Api>('FooApi') // Use this syntax if you don't want to use decorators
 
-Your can see a demo in the `./example` folder. To run this type in `npm run example`.
+  private readonly barApi = scg('BarApi') // Shortcut for ServiceContainer.get()
+}
+ ```
+
+### 4. Other Use-Cases
+
+For Testing or similar use cases you have the option to
+use `ServiceContainer.isSet('anId')`, `ServiceContainer.override('anId', () => 123)` or `ServiceContainer.reset()`.
 
 ## Background
 
@@ -117,19 +136,5 @@ class CustomService {
 
 The `CustomService` has an implizit dependency to the `CustomApi`.
 
-## Goal
-
 The goal of DI is to encapsulate the dependencies of a class. The CustomService should work without knowing which api it
-is using. The following structure should be created:
-
-```mermaid
- classDiagram
-      class Service
-      <<interface>> Service
-      Service <|-- Consumer
-      class Api
-      <<interface>> Api
-      Api <|-- CustomApi : implements
-      Service <|-- CustomService : implements
-      Api <|-- CustomService
-```
+is using. The following structure should be created.
