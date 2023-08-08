@@ -1,35 +1,31 @@
-let services: Service[] = [];
+let services: Record<string, Service> = {};
 
 export default {
   /**
    *
    * @param id to identify the service in the container, it can be mapped to a property name via the inject decorator
    * @param factoryOrClassReference to create the instance of the service
-   * @param buildInstantly by default the service is only instantiated on demand, if required your are able to build the service directly
+   * @param buildInstantly by default the service is only instantiated on demand, if required you are able to build the service directly
    */
   set(id: string, factoryOrClassReference: Factory | Function, buildInstantly: boolean = false) {
     const lowerId = id.toLowerCase();
-    if (services.find(s => s.id === lowerId) !== undefined) {
+
+    if (this.isSet(lowerId)) {
       throw new Error(`Service [${id}] is already registered`);
     }
 
-    let factory: Factory = getFactory(factoryOrClassReference);
-
-    services.push({
-      id: lowerId,
-      factory,
-      instance: buildInstantly ? factory() : undefined,
-    });
+    this.override(lowerId, factoryOrClassReference, buildInstantly);
   },
 
   get<T>(id: string): T {
-    const service = services.find(s => s.id === id.toLowerCase());
+    const service = services[id.toLowerCase()];
     if (!service) {
       throw new Error(`No service is registered for [${id}]`);
     }
 
     if (!service.instance) {
       service.instance = service.factory();
+      service.factory = undefined;
     }
 
     return service.instance;
@@ -37,27 +33,20 @@ export default {
 
   override(id: string, factoryOrClassReference: Factory | Function, buildInstantly: boolean = false) {
     const lowerId = id.toLowerCase();
-    const index = services.findIndex(s => s.id === lowerId);
     let factory: Factory = getFactory(factoryOrClassReference);
-    const service = {
-      id: lowerId,
-      factory,
+
+    services[lowerId] = {
+      factory: buildInstantly ? undefined : factory,
       instance: buildInstantly ? factory() : undefined,
     };
-    if (index === -1) {
-      services.push(service);
-    } else {
-      services[index] = service;
-    }
-
   },
 
   isSet(id: string): boolean {
-    return services.some(s => s.id === id.toLowerCase());
+    return services[id.toLowerCase()] !== undefined;
   },
 
   reset() {
-    services = [];
+    services = {};
   }
 
 };
@@ -74,7 +63,6 @@ function getFactory(factoryOrClassReference: Factory | Function): Factory {
 
 type Factory = () => any;
 type Service = {
-  id: string;
   factory: () => any;
   instance?: any;
 }
