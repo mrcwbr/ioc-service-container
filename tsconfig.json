@@ -6,7 +6,10 @@
     "declaration": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
-    "module": "commonjs"
+    "module": "commonjs",
+    "strict": true,
+    "noImplicitAny": true,
+    "strictPropertyInitialization": true
   },
   "include": [
     "src/**/*"
