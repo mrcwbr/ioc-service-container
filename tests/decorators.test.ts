@@ -26,6 +26,7 @@ describe('decorators', () => {
 
     inject(anObject, 'aService');
 
+    // @ts-ignore
     expect(() => anObject.aService = jest.fn()).toThrow('Injected property [aService] can\'t be reset');
   });
 

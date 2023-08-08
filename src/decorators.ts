@@ -7,7 +7,7 @@ export function inject(serviceIdOrTarget: Object | string, propertyKey?: string)
     };
   }
 
-  redefineObject(serviceIdOrTarget, propertyKey);
+  redefineObject(serviceIdOrTarget, propertyKey!);
 }
 
 function redefineObject(target: Object, propertyKey: string, serviceId?: string) {

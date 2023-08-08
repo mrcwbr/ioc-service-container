@@ -24,7 +24,7 @@ export default {
     }
 
     if (!service.instance) {
-      service.instance = service.factory();
+      service.instance = service.factory?.();
       service.factory = undefined;
     }
 
@@ -63,6 +63,6 @@ function getFactory(factoryOrClassReference: Factory | Function): Factory {
 
 type Factory = () => any;
 type Service = {
-  factory: () => any;
+  factory?: Factory;
   instance?: any;
 }
