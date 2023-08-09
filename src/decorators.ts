@@ -12,7 +12,7 @@ export function inject(serviceIdOrTarget: Object | string, propertyKey?: string)
 
 function redefineObject(target: Object, propertyKey: string, serviceId?: string) {
   function get() {
-    return ServiceContainer.get(serviceId?.toLowerCase() || propertyKey.toLowerCase());
+    return ServiceContainer.get(serviceId?.toLowerCase() ?? propertyKey.toLowerCase());
   }
 
   function set() {
