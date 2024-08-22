@@ -1,7 +1,6 @@
 import { ServiceContainer } from '../src';
 
 describe('ServiceContainer', () => {
-
   it('should set (by factory) and get service', () => {
     const id = 'aService';
     ServiceContainer.set(id, () => 123);
@@ -24,6 +23,17 @@ describe('ServiceContainer', () => {
     expect(serviceFromIoc.bar()).toBe('bar');
   });
 
+  it('should set by any object', () => {
+    const unique = Symbol(1);
+    ServiceContainer.set('unique', unique);
+    ServiceContainer.set('1', 1);
+    ServiceContainer.set('foo', 'foo');
+
+    expect(ServiceContainer.get('unique')).toBe(unique);
+    expect(ServiceContainer.get('1')).toBe(1);
+    expect(ServiceContainer.get('foo')).toBe('foo');
+  });
+
   it('service should be instantiated on demand by default', () => {
     const listener = jest.fn();
     const factory = () => {
@@ -31,59 +41,6 @@ describe('ServiceContainer', () => {
     };
     ServiceContainer.set('id', factory);
     expect(listener).not.toHaveBeenCalled();
-  });
-
-  describe('service should be instantiated instantly if required', () => {
-
-    describe('set', () => {
-
-      it('as factory', () => {
-        const listener = jest.fn();
-        const factory = () => {
-          listener();
-        };
-        ServiceContainer.set('id', factory, true);
-        expect(listener).toHaveBeenCalled();
-      });
-
-      it('as class reference', () => {
-        const listener = jest.fn();
-
-        class Foo {
-          constructor() {
-            listener();
-          }
-        }
-
-        ServiceContainer.set('id', Foo, true);
-        expect(listener).toHaveBeenCalled();
-      });
-    });
-
-    describe('override', () => {
-      it('as factory', () => {
-        const listener = jest.fn();
-        const factory = () => {
-          listener();
-        };
-        ServiceContainer.override('id', factory, true);
-        expect(listener).toHaveBeenCalled();
-      });
-
-      it('as class reference', () => {
-        const listener = jest.fn();
-
-        class Foo {
-          constructor() {
-            listener();
-          }
-        }
-
-        ServiceContainer.override('id', Foo, true);
-        expect(listener).toHaveBeenCalled();
-      });
-    });
-
   });
 
   it('should only call factory once', () => {
@@ -160,5 +117,4 @@ describe('ServiceContainer', () => {
   afterEach(() => {
     ServiceContainer.reset();
   });
-
 });

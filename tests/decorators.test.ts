@@ -1,7 +1,6 @@
 import { inject, ServiceContainer } from '../src/';
 
 describe('decorators', () => {
-
   it('inject() should inject service to an object', () => {
     const id = 'aService';
     const service = jest.fn();
@@ -27,7 +26,7 @@ describe('decorators', () => {
     inject(anObject, 'aService');
 
     // @ts-ignore
-    expect(() => anObject.aService = jest.fn()).toThrow('Injected property [aService] can\'t be reset');
+    expect(() => (anObject.aService = jest.fn())).toThrow("Injected property [aService] can't be reset");
   });
 
   it('inject should work as an decorator', () => {
@@ -60,5 +59,4 @@ describe('decorators', () => {
   afterEach(() => {
     ServiceContainer.reset();
   });
-
 });

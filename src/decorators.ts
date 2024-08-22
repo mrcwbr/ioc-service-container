@@ -2,7 +2,7 @@ import ServiceContainer from './ServiceContainer';
 
 export function inject(serviceIdOrTarget: Object | string, propertyKey?: string): any {
   if (typeof serviceIdOrTarget === 'string') {
-    return function(target: Object, propertyKey: string): void {
+    return function (target: Object, propertyKey: string): void {
       redefineObject(target, propertyKey, serviceIdOrTarget);
     };
   }
@@ -21,6 +21,6 @@ function redefineObject(target: Object, propertyKey: string, serviceId?: string)
 
   Object.defineProperty(target, propertyKey, {
     get,
-    set
+    set,
   });
 }
