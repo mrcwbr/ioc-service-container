@@ -1,9 +1,9 @@
 name: NPM Package
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
   release:
     types: [created]
 
@@ -11,44 +11,46 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-        cache: 'npm'
-        registry-url: 'https://registry.npmjs.org'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          registry-url: 'https://registry.npmjs.org'
 
-    - name: install dependencies
-      run: npm ci
+      - name: install dependencies
+        run: npm ci
 
-    - name: test
-      run: npm run test
+      - name: check format
+        run: npm run format:check
 
-    - name: build
-      run: npm run build
+      - name: test
+        run: npm run test
 
-    - name: set version
-      if: github.event_name == 'release'
-      run: npm --no-git-tag-version version ${GITHUB_REF#refs/*/}
+      - name: build
+        run: npm run build
 
-    - name: publish package
-      if: github.event_name == 'release'
-      run: npm publish
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
+      - name: set version
+        if: github.event_name == 'release'
+        run: npm --no-git-tag-version version ${GITHUB_REF#refs/*/}
 
-    - name: SonarCloud Scan
-      uses: sonarsource/sonarcloud-github-action@master
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_AUTH_TOKEN }}
-      with:
-        args: >
-          -Dsonar.organization=mrcwbr
-          -Dsonar.projectKey=ioc-service-container
-          -Dsonar.sources=src/
-          -Dsonar.tests=tests/
-          -Dsonar.verbose=true
+      - name: publish package
+        if: github.event_name == 'release'
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
 
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_AUTH_TOKEN }}
+        with:
+          args: >
+            -Dsonar.organization=mrcwbr
+            -Dsonar.projectKey=ioc-service-container
+            -Dsonar.sources=src/
+            -Dsonar.tests=tests/
+            -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info

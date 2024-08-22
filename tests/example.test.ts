@@ -2,7 +2,6 @@ import { example } from '../example/example';
 import { ServiceContainer } from '../src';
 
 describe('example', () => {
-
   beforeEach(() => {
     ServiceContainer.reset();
   });
